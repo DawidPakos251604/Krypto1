@@ -70,7 +70,6 @@
     <!-- Build section with plugins -->
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -255,5 +254,4 @@
             </plugin>
         </plugins>
     </reporting>
-
 </project>

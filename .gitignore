@@ -37,9 +37,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-
-
-/Model/target/
-/View/target/
-/Model/test_file
-/app.log
