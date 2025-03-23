@@ -22,7 +22,7 @@ public class Aes {
     }
 
     public static byte[] shiftRows(byte[] state) {
-        // Create two dimensional array for easier shifting
+        // Create two-dimensional array for easier shifting
         byte[][] tmp = new byte[4][4];
         int k = 0;
         for (int i = 0; i < 4; i++) {
