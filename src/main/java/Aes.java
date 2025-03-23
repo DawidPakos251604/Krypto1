@@ -146,12 +146,39 @@ public class Aes {
 
         for (int i = keySize / 4; i < keyWordsCount; i++) {
             byte[] temp = tmp[i - 1];
+
             if (i % (keySize / 4) == 0) {
                 temp = g(temp, i / (keySize / 4));
-            } else if (keySize == 32 && i % 8 == 4) {
+            }
+
+            // Apply SubWord transformation only for every 8th word (for AES-256 only)
+            if (keySize == 32 && i % 8 == 0) {
                 for (int k = 0; k < 4; k++) {
                     temp[k] = SBox.translateS_Box(temp[k]);
                 }
+            }
+
+            tmp[i] = xorWords(tmp[i - (keySize / 4)], temp);
+        }
+
+        return tmp;
+    }
+
+    public byte[][] generateSubKeys1(byte[] keyInput) {
+        int keyWordsCount = (rounds + 1) * 4;
+        byte[][] tmp = new byte[keyWordsCount][4];
+
+        int j = 0;
+        for (int i = 0; i < keySize / 4; i++) {
+            for (int k = 0; k < 4; k++) {
+                tmp[i][k] = keyInput[j++];
+            }
+        }
+
+        for (int i = keySize / 4; i < keyWordsCount; i++) {
+            byte[] temp = tmp[i - 1];
+            if (i % (keySize / 4) == 0) {
+                temp = g(temp, i / (keySize / 4)); // Apply g transformation
             }
             tmp[i] = xorWords(tmp[i - (keySize / 4)], temp);
         }
@@ -219,10 +246,10 @@ public class Aes {
         byte[] tmp = new byte[16];
         for (int i = 0; i < 4; i++) {
             int col = i * 4;
-            tmp[col] = (byte) (mul(0x02, state[col]) ^ mul(0x03, state[col+1]) ^ state[col+2] ^ state[col+3]);
-            tmp[col+1] = (byte) (state[col] ^ mul(0x02, state[col+1]) ^ mul(0x03, state[col+2]) ^ state[col+3]);
-            tmp[col+2] = (byte) (state[col] ^ state[col+1] ^ mul(0x02, state[col+2]) ^ mul(0x03, state[col+3]));
-            tmp[col+3] = (byte) (mul(0x03, state[col]) ^ state[col+1] ^ state[col+2] ^ mul(0x02, state[col+3]));
+            tmp[col] = (byte) (mul(0x02, state[col]) ^ mul(0x03, state[col + 1]) ^ state[col + 2] ^ state[col + 3]);
+            tmp[col + 1] = (byte) (state[col] ^ mul(0x02, state[col + 1]) ^ mul(0x03, state[col + 2]) ^ state[col + 3]);
+            tmp[col + 2] = (byte) (state[col] ^ state[col + 1] ^ mul(0x02, state[col + 2]) ^ mul(0x03, state[col + 3]));
+            tmp[col + 3] = (byte) (mul(0x03, state[col]) ^ state[col + 1] ^ state[col + 2] ^ mul(0x02, state[col + 3]));
         }
         return tmp;
     }
@@ -231,10 +258,10 @@ public class Aes {
         byte[] tmp = new byte[16];
         for (int i = 0; i < 4; i++) {
             int col = i * 4;
-            tmp[col] = (byte) (mul(0x0E, state[col]) ^ mul(0x0B, state[col+1]) ^ mul(0x0D, state[col+2]) ^ mul(0x09, state[col+3]));
-            tmp[col+1] = (byte) (mul(0x09, state[col]) ^ mul(0x0E, state[col+1]) ^ mul(0x0B, state[col+2]) ^ mul(0x0D, state[col+3]));
-            tmp[col+2] = (byte) (mul(0x0D, state[col]) ^ mul(0x09, state[col+1]) ^ mul(0x0E, state[col+2]) ^ mul(0x0B, state[col+3]));
-            tmp[col+3] = (byte) (mul(0x0B, state[col]) ^ mul(0x0D, state[col+1]) ^ mul(0x09, state[col+2]) ^ mul(0x0E, state[col+3]));
+            tmp[col] = (byte) (mul(0x0E, state[col]) ^ mul(0x0B, state[col + 1]) ^ mul(0x0D, state[col + 2]) ^ mul(0x09, state[col + 3]));
+            tmp[col + 1] = (byte) (mul(0x09, state[col]) ^ mul(0x0E, state[col + 1]) ^ mul(0x0B, state[col + 2]) ^ mul(0x0D, state[col + 3]));
+            tmp[col + 2] = (byte) (mul(0x0D, state[col]) ^ mul(0x09, state[col + 1]) ^ mul(0x0E, state[col + 2]) ^ mul(0x0B, state[col + 3]));
+            tmp[col + 3] = (byte) (mul(0x0B, state[col]) ^ mul(0x0D, state[col + 1]) ^ mul(0x09, state[col + 2]) ^ mul(0x0E, state[col + 3]));
         }
         return tmp;
     }
@@ -255,7 +282,12 @@ public class Aes {
         return result;
     }
 
-    /** Każdy bajt bloku jest zamieniany na inny z SBoxa. */
+    /**
+     * Each byte of the state is substituted with the corresponding byte from the S-Box.
+     *
+     * @param state An array of bytes representing the state to be transformed.
+     * @return A new array of bytes after applying the substitution using the S-Box.
+     */
     public byte[] subBytes(byte[] state) {
         byte[] tmp = new byte[state.length];
         for (int i = 0; i < state.length; i++) {
@@ -272,10 +304,15 @@ public class Aes {
         return tmp;
     }
 
-    /**Blok jest tabelą 4x4. Pierwszy wiersz
-     nie ruszmy, dla drugiego stosujemy operację ROL
-     (rotate left) o jedną pozycję, dla trzeciego ROL o
-     dwie pozycje, dla czwartego ROL o trzy pozycje.*/
+    /**
+     * The block is a 4x4 matrix. The first row remains unchanged, for the second row
+     * a left rotation (ROL) by one position is applied, for the third row a left rotation
+     * by two positions is applied, and for the fourth row a left rotation by three positions
+     * is applied.
+     *
+     * @param state A byte array representing the 4x4 block (state) to be shifted.
+     * @return A new byte array representing the state after performing the row shifts.
+     */
     public static byte[] shiftRows(byte[] state) {
         // Create two-dimensional array for easier shifting
         byte[][] tmp = new byte[4][4];
@@ -326,6 +363,15 @@ public class Aes {
         return newState;
     }
 
+    /**
+     * The block is a 4x4 matrix. The first row remains unchanged, for the second row
+     * a right rotation (ROL) by one position is applied, for the third row a right rotation
+     * by two positions is applied, and for the fourth row a right rotation by three positions
+     * is applied.
+     *
+     * @param state A byte array representing the 4x4 block (state) to be shifted.
+     * @return A new byte array representing the state after performing the row shifts.
+     */
     public static byte[] shiftRowsReversed(byte[] state) {
         // Create two-dimensional array for easier shifting
         byte[][] tmp = new byte[4][4];
