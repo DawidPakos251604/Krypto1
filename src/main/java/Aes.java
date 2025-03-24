@@ -34,7 +34,7 @@ public class Aes {
         byte[] blok = new byte[16];
 
 
-        // rewrite message to temporary array + append 0s
+        // Rewrite message to temporary array + append 0s
         for (int i = 0; i < charactersToEncodeCount; ++i) {
             if (i < message.length) {
                 temp[i] = message[i];
@@ -43,7 +43,7 @@ public class Aes {
             }
         }
 
-        // construct output array...
+        // Construct output array...
         int i = 0;
         while (i < temp.length) {
             for (int j = 0; j < 16; ++j) {
@@ -65,7 +65,7 @@ public class Aes {
         int blocksCount = message.length / 16;
         byte[][] dataAsBlocks = new byte[blocksCount][16];
 
-        // load data as blocks:
+        // Load data as blocks:
 
         int i = 0;
         for (int block = 0; block < blocksCount; block++) {
@@ -74,7 +74,6 @@ public class Aes {
                 i++;
             }
         }
-
 
         i = 0;
 
@@ -86,7 +85,7 @@ public class Aes {
             }
         }
 
-        // count trailing zeros in tmp...
+        // Count trailing zeros in tmp...
         int zeros = 0;
         for (int j = 0; j < 16; j++) {
             if (tmp[tmp.length - (j + 1)] == '\0') {
@@ -98,7 +97,6 @@ public class Aes {
 
         byte[] output = new byte[blocksCount * 16 - zeros];
         System.arraycopy(tmp, 0, output, 0, blocksCount * 16 - zeros);
-
 
         return output;
     }
@@ -148,7 +146,7 @@ public class Aes {
             byte[] temp = tmp[i - 1];
 
             if (i % (keySize / 4) == 0) {
-                temp = g(temp, i / (keySize / 4));
+                temp = generateRoundKeyWord(temp, i / (keySize / 4));
             }
 
             // Apply SubWord transformation only for every 8th word (for AES-256 only)
@@ -161,27 +159,6 @@ public class Aes {
             tmp[i] = xorWords(tmp[i - (keySize / 4)], temp);
         }
 
-        return tmp;
-    }
-
-    public byte[][] generateSubKeys1(byte[] keyInput) {
-        int keyWordsCount = (rounds + 1) * 4;
-        byte[][] tmp = new byte[keyWordsCount][4];
-
-        int j = 0;
-        for (int i = 0; i < keySize / 4; i++) {
-            for (int k = 0; k < 4; k++) {
-                tmp[i][k] = keyInput[j++];
-            }
-        }
-
-        for (int i = keySize / 4; i < keyWordsCount; i++) {
-            byte[] temp = tmp[i - 1];
-            if (i % (keySize / 4) == 0) {
-                temp = g(temp, i / (keySize / 4)); // Apply g transformation
-            }
-            tmp[i] = xorWords(tmp[i - (keySize / 4)], temp);
-        }
         return tmp;
     }
 
@@ -210,7 +187,6 @@ public class Aes {
         return tmp;
     }
 
-
     public byte[] xorWords(byte[] word1, byte[] word2) {
         byte[] tmp = new byte[word1.length];
         for (int i = 0; i < word1.length; i++) {
@@ -219,7 +195,7 @@ public class Aes {
         return tmp;
     }
 
-    public byte[] g(byte[] word, int round) {
+    public byte[] generateRoundKeyWord(byte[] word, int round) {
         byte[] result = new byte[4];
         // RotWord
         result[0] = word[1];
@@ -242,6 +218,12 @@ public class Aes {
             (byte) 0x20, (byte) 0x40, (byte) 0x80, (byte) 0x1B, (byte) 0x36
     };
 
+    /**
+     * Performs the mixing of the state block by multiplying it with a fixed matrix.
+     *
+     * @param state The input state array to be mixed.
+     * @return The transformed state array after applying the MixColumns operation.
+     */
     public byte[] mixColumns(byte[] state) {
         byte[] tmp = new byte[16];
         for (int i = 0; i < 4; i++) {
