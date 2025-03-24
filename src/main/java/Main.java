@@ -6,21 +6,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-
 public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    @Override
     public void start(Stage primaryStage) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/config_scene.fxml"));
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"));
         AnchorPane root = loader.load();
-        Scene scene = new Scene(root);
 
-        primaryStage.setTitle("AES Encryption Tool");
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Wybór Trybu");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

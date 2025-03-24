@@ -32,8 +32,17 @@ public class FileHandler {
 
     // Zapis danych binarnych do pliku
     public static void saveBytesToFile(byte[] data, String filePath) throws IOException {
+        if (data == null || data.length == 0) {
+            System.out.println("Brak danych do zapisania!");
+            return;
+        }
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(data);
+            System.out.println("Dane zapisane pomyślnie do: " + filePath);
+        } catch (IOException e) {
+            System.err.println("Błąd podczas zapisu: " + e.getMessage());
+            throw e;
         }
     }
 }
