@@ -15,11 +15,6 @@ public class TextModeController {
 
     private Aes aes;
 
-    @FXML
-    private void initialize() {
-        keySizeCombo.getItems().addAll("128", "192", "256");
-        keySizeCombo.setValue("128");  // Domyślnie 128-bitowy klucz
-    }
 
     @FXML
     private void encryptText() {
@@ -27,7 +22,7 @@ public class TextModeController {
             String text = inputText.getText();
             String key = keyInput.getText();
             if (text.isEmpty() || key.isEmpty()) {
-                outputText.setText("Błąd: Podaj tekst i klucz!");
+                outputText.setText("Error: Please enter text and key!");
                 return;
             }
 
@@ -38,7 +33,7 @@ public class TextModeController {
 
             outputText.setText(hexResult);
         } catch (Exception e) {
-            outputText.setText("Błąd szyfrowania: " + e.getMessage());
+            outputText.setText("Encryption error: " + e.getMessage());
         }
     }
 
@@ -48,7 +43,7 @@ public class TextModeController {
             String hexText = inputText.getText();
             String key = keyInput.getText();
             if (hexText.isEmpty() || key.isEmpty()) {
-                outputText.setText("Błąd: Podaj szyfrogram i klucz!");
+                outputText.setText("Error: Please enter ciphertext and key!");
                 return;
             }
 
@@ -60,22 +55,22 @@ public class TextModeController {
 
             outputText.setText(result);
         } catch (Exception e) {
-            outputText.setText("Błąd deszyfrowania: " + e.getMessage());
+            outputText.setText("Decryption error: " + e.getMessage());
         }
     }
 
-    // Przygotowanie klucza do wymaganej długości (128/192/256 bitów)
+    // Preparing the key to the required length (128/192/256 bits)
     private byte[] prepareKey(String key) {
         int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         byte[] preparedKey = new byte[keySize];
 
-        // Kopiowanie klucza do tablicy o odpowiednim rozmiarze
+        // Copying the key into the array of appropriate size
         System.arraycopy(keyBytes, 0, preparedKey, 0, Math.min(keyBytes.length, keySize));
         return preparedKey;
     }
 
-    // Konwersja bajtów na HEX
+    // Converting bytes to HEX
     private String bytesToHex(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {
@@ -84,7 +79,7 @@ public class TextModeController {
         return hexString.toString();
     }
 
-    // Konwersja HEX na bajty
+    // Converting HEX to bytes
     private byte[] hexToBytes(String hex) {
         int length = hex.length();
         byte[] data = new byte[length / 2];

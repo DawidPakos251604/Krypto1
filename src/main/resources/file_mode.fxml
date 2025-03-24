@@ -13,7 +13,7 @@
     <children>
         <VBox spacing="20" alignment="CENTER" prefHeight="300.0" prefWidth="600.0">
             <HBox spacing="10" alignment="CENTER">
-                <Label text="Rozmiar klucza:"/>
+                <Label text="Key size:"/>
                 <ComboBox fx:id="keySizeCombo">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -24,15 +24,15 @@
                     </items>
                 </ComboBox>
 
-                <Label text="Wpisz klucz:"/>
-                <TextField fx:id="keyInput" promptText="Wpisz klucz"/>
+                <Label text="Enter key:"/>
+                <TextField fx:id="keyInput" promptText="Enter key"/>
             </HBox>
 
-            <!-- Dwa przyciski do wyboru, czy szyfrować, czy deszyfrować -->
+            <!-- Two buttons to choose whether to encrypt or decrypt -->
             <HBox spacing="20" alignment="CENTER">
-                <Button text="Wczytaj plik" onAction="#loadFromFile"/>
-                <Button text="Zapisz plik (Szyfruj)" onAction="#saveToFile" fx:id="encryptButton"/>
-                <Button text="Zapisz plik (Deszyfruj)" onAction="#decryptFile" fx:id="decryptButton"/>
+                <Button text="Load file" onAction="#loadFromFile"/>
+                <Button text="Save file (Encrypt)" onAction="#saveToFile" fx:id="encryptButton"/>
+                <Button text="Save file (Decrypt)" onAction="#decryptFile" fx:id="decryptButton"/>
             </HBox>
         </VBox>
     </children>
