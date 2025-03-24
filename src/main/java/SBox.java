@@ -38,15 +38,33 @@ public class SBox {
             {0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d}
     };
 
+    /**
+     * Translates a byte using the AES S-box.
+     * The S-box is used in the SubBytes step of AES encryption, providing non-linear substitution.
+     * This method extracts the row (x) and column (y) indices from the byte,
+     * and uses them to look up the corresponding value in the S-box.
+     *
+     * @param b The byte to be substituted using the S-box.
+     * @return The substituted byte from the S-box.
+     */
     static byte translateS_Box(byte b) {
-        int x = (b & 0b11110000) >> 4;
-        int y = b & 0b00001111;
-        return (byte) S_Box[x][y];
+        int x = (b & 0b11110000) >> 4;  // Extract the row index (first 4 bits).
+        int y = b & 0b00001111;         // Extract the column index (last 4 bits).
+        return (byte) S_Box[x][y];       // Return the corresponding value from the S-box.
     }
 
+    /**
+     * Translates a byte using the inverse AES S-box.
+     * The inverse S-box is used in the SubBytes step of AES decryption, providing the reverse substitution.
+     * This method extracts the row (x) and column (y) indices from the byte,
+     * and uses them to look up the corresponding value in the inverse S-box.
+     *
+     * @param b The byte to be substituted using the inverse S-box.
+     * @return The substituted byte from the inverse S-box.
+     */
     static byte translateInv_S_Box(byte b) {
-        int x = (b & 0b11110000) >> 4;
-        int y = b & 0b00001111;
-        return (byte) Inv_S_Box[x][y];
+        int x = (b & 0b11110000) >> 4;  // Extract the row index (first 4 bits).
+        int y = b & 0b00001111;         // Extract the column index (last 4 bits).
+        return (byte) Inv_S_Box[x][y];   // Return the corresponding value from the inverse S-box.
     }
 }

@@ -29,6 +29,8 @@
         </license>
     </licenses>
 
+    <description>Zadanie 1 grupy laboratoryjnej 2025_JMON_PN_1545_NP_06</description>
+
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>

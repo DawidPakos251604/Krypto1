@@ -12,7 +12,6 @@ public class AesTest {
                 (byte) 0xa8, (byte) 0x8d, (byte) 0xa2, (byte) 0x34
         };
 
-        // Expected output after applying reversed shift rows
         byte[] expectedState = {
                 (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
                 (byte) 0x5a, (byte) 0x31, (byte) 0x37, (byte) 0x43,
@@ -34,7 +33,6 @@ public class AesTest {
                 (byte) 0xa8, (byte) 0x8d, (byte) 0xa2, (byte) 0x34
         };
 
-        // Expected output after applying reversed shift rows
         byte[] expectedState = {
                 (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
                 (byte) 0x37, (byte) 0x43, (byte) 0x5a, (byte) 0x31,
@@ -93,7 +91,6 @@ public class AesTest {
 
     @Test
     public void testEncryptionAndDecryption128Bit() throws Exception {
-        // 128-bit (16 bytes) key and plaintext
         byte[] key = "1234567890abcdef".getBytes(); // 128-bit key
         byte[] plaintext = "This is a test!!!".getBytes(); // 16 bytes plaintext (for AES-128)
 
@@ -108,7 +105,6 @@ public class AesTest {
 
     @Test
     public void testEncryptionAndDecryption192Bit() throws Exception {
-        // 192-bit (24 bytes) key and plaintext
         byte[] key = "1234567890abcdef12345678".getBytes(); // 192-bit key
         byte[] plaintext = "This is a 192-bit key test.".getBytes(); // 24 bytes plaintext
 
@@ -123,7 +119,6 @@ public class AesTest {
 
     @Test
     public void testEncryptionAndDecryption256Bit() throws Exception {
-        // 256-bit (32 bytes) key and plaintext
         byte[] key = "1234567890abcdef1234567890abcdef".getBytes(); // 256-bit key
         byte[] plaintext = "This is a 256-bit key test!!!".getBytes(); // 32 bytes plaintext
 

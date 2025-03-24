@@ -6,6 +6,14 @@ public class Aes {
     int keySize;
     int rounds;
 
+    /**
+     * The constructor initializes the AES instance with the given key.
+     * It checks if the key length is valid (16, 24, or 32 bytes) and calculates the number of rounds
+     * and generates the required subkeys for encryption and decryption.
+     *
+     * @param originalKey The encryption key.
+     * @throws Exception If the key length is invalid.
+     */
     public Aes(byte[] originalKey) throws Exception {
         if (originalKey.length != 16 && originalKey.length != 24 && originalKey.length != 32) {
             throw new Exception("Key has wrong length! Supported lengths: 16, 24, 32 bytes (128, 192, 256 bits)");
@@ -17,6 +25,13 @@ public class Aes {
         this.keyWordsReversed = generateReversedSubKeys(keyWords);
     }
 
+    /**
+     * Encodes the given message using the AES encryption algorithm.
+     * The message is padded if necessary to make it a multiple of 16 bytes.
+     *
+     * @param message The message to be encrypted.
+     * @return The encrypted message.
+     */
     public byte[] encode(byte[] message) {
 
         int wholeBlocksCount = message.length / 16;
@@ -57,6 +72,13 @@ public class Aes {
         return result;
     }
 
+    /**
+     * Decodes the given encrypted message using the AES decryption algorithm.
+     * It assumes the message is a multiple of 16 bytes.
+     *
+     * @param message The encrypted message to be decrypted.
+     * @return The decrypted message.
+     */
     public byte[] decode(byte[] message) {
         if (message.length % 16 != 0) {
             return null;
@@ -101,6 +123,13 @@ public class Aes {
         return output;
     }
 
+    /**
+     * Encrypts a single block of plaintext using AES algorithm.
+     * The process involves multiple rounds, including SubBytes, ShiftRows, MixColumns, and AddRoundKey.
+     *
+     * @param plaintext A 16-byte block to be encrypted.
+     * @return The encrypted 16-byte block.
+     */
     public byte[] encrypt(byte[] plaintext) {
         byte[] state = plaintext.clone();
         state = addRoundKey(state, 0);
@@ -116,6 +145,13 @@ public class Aes {
         return state;
     }
 
+    /**
+     * Decrypts a single block of ciphertext using AES algorithm.
+     * The process involves reversing the encryption steps in reverse order.
+     *
+     * @param ciphertext A 16-byte block to be decrypted.
+     * @return The decrypted 16-byte block.
+     */
     public byte[] decrypt(byte[] ciphertext) {
         byte[] state = ciphertext.clone();
         state = addRoundKey(state, rounds);
@@ -131,6 +167,13 @@ public class Aes {
         return state;
     }
 
+    /**
+     * Generates the subkeys for the AES encryption and decryption process.
+     * It expands the original key into a series of round keys required for the encryption rounds.
+     *
+     * @param keyInput The original key input.
+     * @return A two-dimensional array containing the round keys.
+     */
     public byte[][] generateSubKeys(byte[] keyInput) {
         int keyWordsCount = (rounds + 1) * 4;
         byte[][] tmp = new byte[keyWordsCount][4];
@@ -162,6 +205,12 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * Generates the reversed subkeys by reversing the order of the generated subkeys.
+     *
+     * @param keyWords The original subkeys.
+     * @return The reversed subkeys array.
+     */
     public byte[][] generateReversedSubKeys(byte[][] keyWords) {
         int k = 0;
         byte[][] tmp = new byte[(rounds + 1) * 4][4];
@@ -174,6 +223,13 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * Adds the round key to the state during encryption or decryption by performing an XOR operation.
+     *
+     * @param state The state to which the round key is added.
+     * @param round The current round number.
+     * @return The updated state after the round key is added.
+     */
     public byte[] addRoundKey(byte[] state, int round) {
         byte[] tmp = new byte[state.length];
         int start = round * 4;
@@ -187,6 +243,13 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * XORs two words (byte arrays) element by element.
+     *
+     * @param word1 The first word (byte array) to be XORed.
+     * @param word2 The second word (byte array) to be XORed.
+     * @return The result of XORing the two words.
+     */
     public byte[] xorWords(byte[] word1, byte[] word2) {
         byte[] tmp = new byte[word1.length];
         for (int i = 0; i < word1.length; i++) {
@@ -195,6 +258,14 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * Generates a round key word using the AES key expansion algorithm.
+     * This includes the RotWord, SubBytes, and XORing with the round constant (Rcon).
+     *
+     * @param word The word to be expanded.
+     * @param round The current round number.
+     * @return The expanded round key word.
+     */
     public byte[] generateRoundKeyWord(byte[] word, int round) {
         byte[] result = new byte[4];
         // RotWord
@@ -203,7 +274,7 @@ public class Aes {
         result[2] = word[3];
         result[3] = word[0];
 
-        // SubBytes
+        // SubWord
         for (int i = 0; i < 4; i++) {
             result[i] = SBox.translateS_Box(result[i]);
         }
@@ -236,6 +307,12 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * The inverse of the MixColumns operation. It mixes the state using a different fixed matrix for the reversal process.
+     *
+     * @param state The input state array to be mixed using the inverse MixColumns operation.
+     * @return The transformed state array after applying the inverse MixColumns operation.
+     */
     public byte[] mixColumnsReversed(byte[] state) {
         byte[] tmp = new byte[16];
         for (int i = 0; i < 4; i++) {
@@ -248,6 +325,13 @@ public class Aes {
         return tmp;
     }
 
+    /**
+     * Multiplies a byte by an integer using the Galois Field (GF(2^8)) arithmetic.
+     *
+     * @param a The multiplier.
+     * @param b The byte to be multiplied.
+     * @return The result of the multiplication.
+     */
     private byte mul(int a, byte b) {
         byte result = 0;
         for (int i = 0; i < 8; i++) {
@@ -278,6 +362,13 @@ public class Aes {
         return tmp;
     }
 
+
+    /**
+     * Each byte of the state is substituted with the corresponding byte from the inverse S-Box.
+     *
+     * @param state An array of bytes representing the state to be transformed.
+     * @return A new array of bytes after applying the inverse substitution using the inverse S-Box.
+     */
     public byte[] subBytesReversed(byte[] state) {
         byte[] tmp = new byte[state.length];
         for (int i = 0; i < state.length; i++) {
