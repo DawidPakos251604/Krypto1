@@ -2,38 +2,38 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Utility class for handling file operations (reading and writing binary files).
+ */
 public class FileHandler {
 
-    // Wczytywanie pliku binarnego i konwersja na hex (do wyświetlania w GUI)
-    public static String loadFileAsHex(String filePath) throws IOException {
-        byte[] content = Files.readAllBytes(Paths.get(filePath));
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : content) {
-            hexString.append(String.format("%02X", b));
-        }
-        return hexString.toString();
-    }
-
-    // Zapis danych heksadecymalnych (np. zaszyfrowanych) do pliku binarnego
-    public static void saveHexToFile(String hexData, String filePath) throws IOException {
-        byte[] byteArray = new byte[hexData.length() / 2];
-        for (int i = 0; i < byteArray.length; i++) {
-            byteArray[i] = (byte) Integer.parseInt(hexData.substring(i * 2, i * 2 + 2), 16);
-        }
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            fos.write(byteArray);
-        }
-    }
-
-    // Wczytywanie pliku binarnego jako byte[] (dla operacji na danych)
+    /**
+     * Reads the contents of a file as a byte array.
+     *
+     * @param filePath The path to the file to be read.
+     * @return A byte array containing the file's data.
+     * @throws IOException If an error occurs while reading the file.
+     */
     public static byte[] loadFileAsBytes(String filePath) throws IOException {
         return Files.readAllBytes(Paths.get(filePath));
     }
 
-    // Zapis danych binarnych do pliku
+    /**
+     * Saves the given byte data to a file.
+     *
+     * @param data     The byte array to be written to the file.
+     * @param filePath The path to the file where the data will be saved.
+     * @throws IOException If an error occurs while writing to the file.
+     */
     public static void saveBytesToFile(byte[] data, String filePath) throws IOException {
+        if (data == null || data.length == 0) {
+            throw new IOException("No data to save!");
+        }
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(data);
+        } catch (IOException e) {
+            throw new IOException("Error while writing file: " + e.getMessage(), e);
         }
     }
 }

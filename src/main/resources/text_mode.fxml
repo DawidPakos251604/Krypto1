@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="TextModeController"
+            prefHeight="500.0" prefWidth="800.0">
+
+    <children>
+        <VBox spacing="10" alignment="CENTER" prefHeight="500.0" prefWidth="800.0">
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Key size:"/>
+                <ComboBox fx:id="keySizeCombo">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="128"/>
+                            <String fx:value="192"/>
+                            <String fx:value="256"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <Label text="Enter key:"/>
+                <TextField fx:id="keyInput" promptText="Enter key"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER">
+                <TextArea fx:id="inputText" promptText="Enter text" prefWidth="350" prefHeight="400"/>
+
+                <VBox spacing="10" alignment="CENTER">
+                    <Button text="Encrypt" onAction="#encryptText"/>
+                    <Button text="Decrypt" onAction="#decryptText"/>
+                </VBox>
+
+                <TextArea fx:id="outputText" promptText="Result will appear here" prefWidth="350" prefHeight="400"/>
+            </HBox>
+        </VBox>
+    </children>
+
+</AnchorPane>
