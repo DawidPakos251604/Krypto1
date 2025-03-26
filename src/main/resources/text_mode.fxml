@@ -31,14 +31,14 @@
             </HBox>
 
             <HBox spacing="10" alignment="CENTER">
-                <TextArea fx:id="inputText" promptText="Enter text" prefWidth="350" prefHeight="400"/>
+                <TextArea fx:id="inputText" promptText="Enter text" prefWidth="350" prefHeight="400" wrapText="true"/>
 
                 <VBox spacing="10" alignment="CENTER">
                     <Button text="Encrypt" onAction="#encryptText"/>
                     <Button text="Decrypt" onAction="#decryptText"/>
                 </VBox>
 
-                <TextArea fx:id="outputText" promptText="Result will appear here" prefWidth="350" prefHeight="400"/>
+                <TextArea fx:id="outputText" promptText="Result will appear here" prefWidth="350" prefHeight="400" wrapText="true"/>
             </HBox>
         </VBox>
     </children>

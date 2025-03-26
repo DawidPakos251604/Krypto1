@@ -59,16 +59,22 @@ public class TextModeController {
         }
     }
 
-    // Preparing the key to the required length (128/192/256 bits)
-    private byte[] prepareKey(String key) {
-        int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
-        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        byte[] preparedKey = new byte[keySize];
+    private byte[] prepareKey(String hexKey) throws IllegalArgumentException {
+        // Sprawdzenie czy podany klucz ma poprawny format (tylko 0-9, A-F)
+        if (!hexKey.matches("^[0-9A-Fa-f]+$") || hexKey.length() % 2 != 0) {
+            throw new IllegalArgumentException("Invalid hex key! Must be even-length and contain only 0-9, A-F.");
+        }
 
-        // Copying the key into the array of appropriate size
+        int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
+        byte[] keyBytes = hexToBytes(hexKey);
+
+        // Dopasowanie klucza do wymaganej długości
+        byte[] preparedKey = new byte[keySize];
         System.arraycopy(keyBytes, 0, preparedKey, 0, Math.min(keyBytes.length, keySize));
+
         return preparedKey;
     }
+
 
     // Converting bytes to HEX
     private String bytesToHex(byte[] bytes) {

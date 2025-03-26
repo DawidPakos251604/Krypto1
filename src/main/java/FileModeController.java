@@ -119,18 +119,30 @@ public class FileModeController {
         }
     }
 
-    /**
-     * Prepares the encryption key to the required length (128/192/256 bits).
-     *
-     * @param key The user-provided key string.
-     * @return A byte array representing the encryption key.
-     */
-    private byte[] prepareKey(String key) {
+
+    private byte[] prepareKey(String hexKey) throws IllegalArgumentException {
+        if (!hexKey.matches("^[0-9A-Fa-f]+$") || hexKey.length() % 2 != 0) {
+            throw new IllegalArgumentException("Invalid hex key! Must be even-length and contain only 0-9, A-F.");
+        }
+
         int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
-        byte[] keyBytes = key.getBytes();
+        byte[] keyBytes = hexToBytes(hexKey);
+
         byte[] preparedKey = new byte[keySize];
         System.arraycopy(keyBytes, 0, preparedKey, 0, Math.min(keyBytes.length, keySize));
+
         return preparedKey;
+    }
+
+    // Converting HEX to bytes
+    private byte[] hexToBytes(String hex) {
+        int length = hex.length();
+        byte[] data = new byte[length / 2];
+        for (int i = 0; i < length; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return data;
     }
 
     /**
