@@ -6,17 +6,17 @@ public class AesTest {
     @Test
     public void testShiftRows() {
         byte[] state = {
-                (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
-                (byte) 0x43, (byte) 0x5a, (byte) 0x31, (byte) 0x37,
-                (byte) 0xf6, (byte) 0x30, (byte) 0x98, (byte) 0x07,
-                (byte) 0xa8, (byte) 0x8d, (byte) 0xa2, (byte) 0x34
+                (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04,
+                (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08,
+                (byte) 0x09, (byte) 0x10, (byte) 0x11, (byte) 0x12,
+                (byte) 0x13, (byte) 0x14, (byte) 0x15, (byte) 0x16
         };
 
         byte[] expectedState = {
-                (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
-                (byte) 0x5a, (byte) 0x31, (byte) 0x37, (byte) 0x43,
-                (byte) 0x98, (byte) 0x07, (byte) 0xf6, (byte) 0x30,
-                (byte) 0x34, (byte) 0xa8, (byte) 0x8d, (byte) 0xa2
+                (byte) 0x01, (byte) 0x06, (byte) 0x11, (byte) 0x16,
+                (byte) 0x05, (byte) 0x10, (byte) 0x15, (byte) 0x04,
+                (byte) 0x09, (byte) 0x14, (byte) 0x03, (byte) 0x08,
+                (byte) 0x13, (byte) 0x02, (byte) 0x07, (byte) 0x12
         };
 
         byte[] result = Aes.shiftRows(state);
@@ -27,17 +27,17 @@ public class AesTest {
     @Test
     public void testShiftRowsReversed() {
         byte[] state = {
-                (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
-                (byte) 0x43, (byte) 0x5a, (byte) 0x31, (byte) 0x37,
-                (byte) 0xf6, (byte) 0x30, (byte) 0x98, (byte) 0x07,
-                (byte) 0xa8, (byte) 0x8d, (byte) 0xa2, (byte) 0x34
+                (byte) 0x01, (byte) 0x06, (byte) 0x11, (byte) 0x16,
+                (byte) 0x05, (byte) 0x10, (byte) 0x15, (byte) 0x04,
+                (byte) 0x09, (byte) 0x14, (byte) 0x03, (byte) 0x08,
+                (byte) 0x13, (byte) 0x02, (byte) 0x07, (byte) 0x12
         };
 
         byte[] expectedState = {
-                (byte) 0x32, (byte) 0x88, (byte) 0x31, (byte) 0xe0,
-                (byte) 0x37, (byte) 0x43, (byte) 0x5a, (byte) 0x31,
-                (byte) 0x98, (byte) 0x07, (byte) 0xf6, (byte) 0x30,
-                (byte) 0x8d, (byte) 0xa2, (byte) 0x34, (byte) 0xa8
+                (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04,
+                (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08,
+                (byte) 0x09, (byte) 0x10, (byte) 0x11, (byte) 0x12,
+                (byte) 0x13, (byte) 0x14, (byte) 0x15, (byte) 0x16
         };
 
         byte[] result = Aes.shiftRowsReversed(state);

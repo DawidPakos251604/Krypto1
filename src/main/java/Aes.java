@@ -392,7 +392,7 @@ public class Aes {
         int k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                tmp[i][j] = state[k];
+                tmp[j][i] = state[k];
                 k++;
             }
         }
@@ -428,7 +428,7 @@ public class Aes {
         k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                newState[k] = tmp[i][j];
+                newState[k] = tmp[j][i];
                 k++;
             }
         }
@@ -451,7 +451,7 @@ public class Aes {
         int k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                tmp[i][j] = state[k];
+                tmp[j][i] = state[k];
                 k++;
             }
         }
@@ -487,7 +487,7 @@ public class Aes {
         k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                newState[k] = tmp[i][j];
+                newState[k] = tmp[j][i];
                 k++;
             }
         }
