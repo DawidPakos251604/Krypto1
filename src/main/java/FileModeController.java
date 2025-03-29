@@ -1,9 +1,16 @@
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -17,9 +24,6 @@ public class FileModeController {
     private ComboBox<String> keySizeCombo;
     private String loadedFilePath;
 
-    /**
-     * Opens a file chooser to select a file for encryption or decryption.
-     */
     @FXML
     private void loadFromFile() {
         FileChooser fileChooser = new FileChooser();
@@ -33,9 +37,6 @@ public class FileModeController {
         }
     }
 
-    /**
-     * Encrypts the selected file and saves it to a new location.
-     */
     @FXML
     private void saveToFile() {
         if (loadedFilePath == null) {
@@ -60,7 +61,8 @@ public class FileModeController {
                     return;
                 }
 
-                byte[] keyBytes = prepareKey(keyText);
+                int keySize = Integer.parseInt(keySizeCombo.getValue());
+                byte[] keyBytes = CryptoUtils.prepareKey(keyText, keySize);
                 Aes aes = new Aes(keyBytes);
                 byte[] encryptedData = aes.encode(originalData);
 
@@ -76,9 +78,6 @@ public class FileModeController {
         }
     }
 
-    /**
-     * Decrypts the selected file and saves it to a new location.
-     */
     @FXML
     private void decryptFile() {
         if (loadedFilePath == null) {
@@ -103,7 +102,8 @@ public class FileModeController {
                     return;
                 }
 
-                byte[] keyBytes = prepareKey(keyText);
+                int keySize = Integer.parseInt(keySizeCombo.getValue());
+                byte[] keyBytes = CryptoUtils.prepareKey(keyText, keySize);
                 Aes aes = new Aes(keyBytes);
                 byte[] decryptedData = aes.decode(encryptedData);
 
@@ -119,39 +119,6 @@ public class FileModeController {
         }
     }
 
-
-    private byte[] prepareKey(String hexKey) throws IllegalArgumentException {
-        if (!hexKey.matches("^[0-9A-Fa-f]+$") || hexKey.length() % 2 != 0) {
-            throw new IllegalArgumentException("Invalid hex key! Must be even-length and contain only 0-9, A-F.");
-        }
-
-        int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
-        byte[] keyBytes = hexToBytes(hexKey);
-
-        byte[] preparedKey = new byte[keySize];
-        System.arraycopy(keyBytes, 0, preparedKey, 0, Math.min(keyBytes.length, keySize));
-
-        return preparedKey;
-    }
-
-    // Converting HEX to bytes
-    private byte[] hexToBytes(String hex) {
-        int length = hex.length();
-        byte[] data = new byte[length / 2];
-        for (int i = 0; i < length; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
-        }
-        return data;
-    }
-
-    /**
-     * Displays an alert dialog to the user.
-     *
-     * @param alertType The type of alert (INFORMATION, WARNING, ERROR).
-     * @param title     The title of the alert window.
-     * @param message   The message to display.
-     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -159,4 +126,25 @@ public class FileModeController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Mode Selection");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            Stage oldStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            oldStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

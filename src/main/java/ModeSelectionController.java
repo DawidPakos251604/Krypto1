@@ -11,12 +11,12 @@ public class ModeSelectionController {
 
     @FXML
     private void openFileMode(ActionEvent event) {
-        openScene("/file_mode.fxml", "Tryb Plikowy", event);
+        openScene("/file_mode.fxml", "File Mode", event);
     }
 
     @FXML
     private void openTextMode(ActionEvent event) {
-        openScene("/text_mode.fxml", "Tryb Tekstowy", event);
+        openScene("/text_mode.fxml", "Text Mode", event);
     }
 
     private void openScene(String fxmlPath, String title, ActionEvent event) {
@@ -29,7 +29,6 @@ public class ModeSelectionController {
             stage.setScene(new Scene(root));
             stage.show();
 
-            // Zamknięcie starego okna (okno wyboru trybu)
             Stage oldStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             oldStage.close();
 

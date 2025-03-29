@@ -14,6 +14,7 @@
     <children>
         <VBox spacing="10" alignment="CENTER" prefHeight="500.0" prefWidth="800.0">
             <Label text="Key will be padded with zeros if it's too short or truncated if it's too long." alignment="CENTER" style="-fx-font-size: 12; -fx-text-fill: gray;"/>
+            <Label text="Input the key in hexadecimal form. It has to be even-lenght." alignment="CENTER" style="-fx-font-size: 12; -fx-text-fill: gray;"/>
             <HBox spacing="10" alignment="CENTER">
                 <Label text="Key size:"/>
                 <ComboBox fx:id="keySizeCombo">
@@ -41,6 +42,9 @@
                 <TextArea fx:id="outputText" promptText="Result will appear here" prefWidth="350" prefHeight="400" wrapText="true"/>
             </HBox>
         </VBox>
+
+        <Button text="Back" onAction="#goBack" layoutX="10" layoutY="10"/>
+
     </children>
 
 </AnchorPane>

@@ -1,7 +1,15 @@
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class TextModeController {
@@ -15,7 +23,6 @@ public class TextModeController {
 
     private Aes aes;
 
-
     @FXML
     private void encryptText() {
         try {
@@ -26,10 +33,11 @@ public class TextModeController {
                 return;
             }
 
-            aes = new Aes(prepareKey(key));
+            int keySize = Integer.parseInt(keySizeCombo.getValue());
+            aes = new Aes(CryptoUtils.prepareKey(key, keySize));
 
             byte[] encrypted = aes.encode(text.getBytes(StandardCharsets.UTF_8));
-            String hexResult = bytesToHex(encrypted);
+            String hexResult = CryptoUtils.bytesToHex(encrypted);
 
             outputText.setText(hexResult);
         } catch (Exception e) {
@@ -47,9 +55,10 @@ public class TextModeController {
                 return;
             }
 
-            aes = new Aes(prepareKey(key));
+            int keySize = Integer.parseInt(keySizeCombo.getValue());
+            aes = new Aes(CryptoUtils.prepareKey(key, keySize));
 
-            byte[] encryptedBytes = hexToBytes(hexText);
+            byte[] encryptedBytes = CryptoUtils.hexToBytes(hexText);
             byte[] decrypted = aes.decode(encryptedBytes);
             String result = new String(decrypted, StandardCharsets.UTF_8);
 
@@ -59,40 +68,25 @@ public class TextModeController {
         }
     }
 
-    private byte[] prepareKey(String hexKey) throws IllegalArgumentException {
-        // Sprawdzenie czy podany klucz ma poprawny format (tylko 0-9, A-F)
-        if (!hexKey.matches("^[0-9A-Fa-f]+$") || hexKey.length() % 2 != 0) {
-            throw new IllegalArgumentException("Invalid hex key! Must be even-length and contain only 0-9, A-F.");
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Wybór Trybu");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            Stage oldStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            oldStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        int keySize = Integer.parseInt(keySizeCombo.getValue()) / 8;
-        byte[] keyBytes = hexToBytes(hexKey);
-
-        // Dopasowanie klucza do wymaganej długości
-        byte[] preparedKey = new byte[keySize];
-        System.arraycopy(keyBytes, 0, preparedKey, 0, Math.min(keyBytes.length, keySize));
-
-        return preparedKey;
-    }
-
-
-    // Converting bytes to HEX
-    private String bytesToHex(byte[] bytes) {
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : bytes) {
-            hexString.append(String.format("%02X", b));
-        }
-        return hexString.toString();
-    }
-
-    // Converting HEX to bytes
-    private byte[] hexToBytes(String hex) {
-        int length = hex.length();
-        byte[] data = new byte[length / 2];
-        for (int i = 0; i < length; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
-        }
-        return data;
     }
 }
+
+
+
