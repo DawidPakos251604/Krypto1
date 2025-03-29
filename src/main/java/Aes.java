@@ -388,14 +388,7 @@ public class Aes {
      */
     public static byte[] shiftRows(byte[] state) {
         // Create two-dimensional array for easier shifting
-        byte[][] tmp = new byte[4][4];
-        int k = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                tmp[j][i] = state[k];
-                k++;
-            }
-        }
+        byte[][] tmp = toMatrix(state);
 
         // Row 1 stays the same (no shift)
 
@@ -424,16 +417,7 @@ public class Aes {
         tmp[3][3] = temp6;
 
         // Create one dimensional array to return output
-        byte[] newState = new byte[16];
-        k = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                newState[k] = tmp[j][i];
-                k++;
-            }
-        }
-
-        return newState;
+        return toArray(tmp);
     }
 
     /**
@@ -447,14 +431,7 @@ public class Aes {
      */
     public static byte[] shiftRowsReversed(byte[] state) {
         // Create two-dimensional array for easier shifting
-        byte[][] tmp = new byte[4][4];
-        int k = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                tmp[j][i] = state[k];
-                k++;
-            }
-        }
+        byte[][] tmp = toMatrix(state);
 
         // Row 1 stays the same (no shift)
 
@@ -483,16 +460,41 @@ public class Aes {
         tmp[3][0] = temp6;
 
         // Create one-dimensional array to return output
-        byte[] newState = new byte[16];
-        k = 0;
+        return toArray(tmp);
+    }
+
+    /**
+     * Converts a one-dimensional byte array into a 4x4 matrix.
+     *
+     * @param state A byte array representing the block state.
+     * @return A 4x4 matrix representation of the state.
+     */
+    private static byte[][] toMatrix(byte[] state) {
+        byte[][] matrix = new byte[4][4];
+        int k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                newState[k] = tmp[j][i];
-                k++;
+                matrix[j][i] = state[k++];
             }
         }
+        return matrix;
+    }
 
-        return newState;
+    /**
+     * Converts a 4x4 matrix back into a one-dimensional byte array.
+     *
+     * @param matrix A 4x4 matrix representing the block state.
+     * @return A one-dimensional byte array representation of the state.
+     */
+    private static byte[] toArray(byte[][] matrix) {
+        byte[] state = new byte[16];
+        int k = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                state[k++] = matrix[j][i];
+            }
+        }
+        return state;
     }
 
 }
