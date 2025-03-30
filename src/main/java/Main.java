@@ -1,3 +1,10 @@
+//--------------------------------------//
+//  Autorzy:                            //
+//  Dawid Pakos 251604                  //
+//  Aleksandra Szczepocka 251642        //
+//  Zespol 6                            //
+//--------------------------------------//
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

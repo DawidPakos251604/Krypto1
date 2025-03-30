@@ -58,7 +58,7 @@ public class Aes {
             }
         }
 
-        // Construct output array...
+        // Construct output array
         int i = 0;
         while (i < temp.length) {
             for (int j = 0; j < 16; ++j) {
@@ -87,7 +87,7 @@ public class Aes {
         int blocksCount = message.length / 16;
         byte[][] dataAsBlocks = new byte[blocksCount][16];
 
-        // Load data as blocks:
+        // Load data as blocks
 
         int i = 0;
         for (int block = 0; block < blocksCount; block++) {
@@ -107,7 +107,7 @@ public class Aes {
             }
         }
 
-        // Count trailing zeros in tmp...
+        // Count trailing zeros in tmp
         int zeros = 0;
         for (int j = 0; j < 16; j++) {
             if (tmp[tmp.length - (j + 1)] == '\0') {
