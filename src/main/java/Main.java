@@ -25,7 +25,7 @@ public class Main extends Application {
         AnchorPane root = loader.load();
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Wybór Trybu");
+        primaryStage.setTitle("Mode selection");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
