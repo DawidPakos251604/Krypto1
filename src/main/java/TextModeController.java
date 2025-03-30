@@ -75,7 +75,7 @@ public class TextModeController {
             AnchorPane root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Wybór Trybu");
+            stage.setTitle("Mode selection");
             stage.setScene(new Scene(root));
             stage.show();
 
